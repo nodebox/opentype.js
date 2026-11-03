@@ -23,6 +23,15 @@
   "main": "./dist/opentype.js",
   "browser": "./dist/opentype.js",
   "module": "./dist/opentype.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/opentype.mjs",
+      "require": "./dist/opentype.js",
+      "default": "./dist/opentype.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "npm run b:umd && npm run b:esm",
     "dist": " npm run d:umd && npm run d:esm",
