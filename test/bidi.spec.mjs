@@ -180,6 +180,7 @@ describe('bidi.mjs', function() {
 
     describe('glyph mapping', function () {
         let notoSansFont;
+        let notoEmojiFont;
         let bidi;
 
         const features = [{
@@ -189,6 +190,7 @@ describe('bidi.mjs', function() {
 
         beforeEach(()=> {
             notoSansFont = loadSync('./test/fonts/NotoSans-Regular.ttf');
+            notoEmojiFont = loadSync('./test/fonts/noto-emoji.ttf');
         });
 
         it('maps multiple glyphs to multiple characters in the original text source', () => {
@@ -215,6 +217,21 @@ describe('bidi.mjs', function() {
             glyphMap = bidi.getTextGlyphMapping('ff');
             assert.deepEqual(glyphMap, [
                 { index: 1653, replaced: [0, 1] },
+            ]);
+        });
+
+        it('maps multiple utf-16 glyphs to multiple characters in the original text source', () => {
+            bidi = new Bidi();
+            bidi.applyFeatures(notoEmojiFont, features);
+
+            bidi.registerModifier(
+                'glyphIndex', null, token => notoEmojiFont.charToGlyphIndex(token.char)
+            );
+
+            const glyphMap = bidi.getTextGlyphMapping('😀😎');
+            assert.deepEqual(glyphMap, [
+                { index: 882, replaced: [0, 1] },
+                { index: 896, replaced: [2, 3] },
             ]);
         });
     });
